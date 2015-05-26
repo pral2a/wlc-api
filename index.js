@@ -13,7 +13,7 @@ var auth = "Basic " + new Buffer(config.wlc.username + ":" + config.wlc.password
 
 var url =  config.wlc.end_point_url + '/screens/base/monitor_summary.html';
 
-app.get('/', function (req, res) {
+app.get('/wifi', function (req, res) {
   request.get({
       url : url,
       headers : {
@@ -22,12 +22,12 @@ app.get('/', function (req, res) {
     }, 
     function(error, response, body) { 
       var t = cheerio.load(body);
-      var n = t('input[name="1.0.1.wlan_no_of_clients"]').val();
-      
-      console.log(n);
-
       var r = {
-        clients: n
+        clients: t('input[name="1.0.1.wlan_no_of_clients"]').val(),
+        ap: {
+          up: t('input[name="current_up_aps"]').val(),
+          down: t('input[name="current_down_aps"]').val()
+        }
       }
 
       res.json(r);
